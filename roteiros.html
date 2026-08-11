@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roteiros · Nacional Sites</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07070f;
+      --bg2: #0e0e1a;
+      --bg3: #13131f;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8e8f0;
+      --muted: #7a7a9a;
+      --v1: #6ee7b7;    /* Demonstrativos – verde menta */
+      --v1d: #059669;
+      --v2: #93c5fd;    /* UGC – azul */
+      --v2d: #2563eb;
+      --v3: #f9a8d4;    /* Generalista – rosa */
+      --v3d: #db2777;
+      --v4: #fcd34d;    /* Estética – âmbar */
+      --v4d: #d97706;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 99px; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .hero__glow {
+      position: absolute;
+      width: 800px; height: 800px;
+      border-radius: 50%;
+      filter: blur(160px);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+    .hero__glow--1 { background: #6366f1; top: -200px; left: -200px; }
+    .hero__glow--2 { background: #8b5cf6; bottom: -200px; right: -200px; }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 99px;
+      padding: 6px 18px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+      margin-bottom: 2rem;
+    }
+    .hero__badge span { width: 6px; height: 6px; border-radius: 50%; background: #6366f1; animation: pulse 2s infinite; }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero__title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero__sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 3rem;
+    }
+
+    .hero__cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      max-width: 700px;
+    }
+
+    .hero__card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .hero__card:hover { background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+    .hero__card .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .scroll-hint__line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine { 0%,100% { transform: scaleY(1); opacity:1; } 50% { transform: scaleY(0.5); opacity:0.4; } }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,7,15,0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav__inner::-webkit-scrollbar { display: none; }
+    .nav__logo {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: -0.02em;
+      color: #fff;
+      white-space: nowrap;
+      padding: 1rem 0;
+      margin-right: 1rem;
+      opacity: 0.7;
+    }
+    .nav__link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .nav__link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav__link .chip {
+      width: 7px; height: 7px; border-radius: 50%;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    .section + .section {
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── VERTENTE HEADER ── */
+    .v-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .v-number {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .v-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .v-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 14px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      align-self: flex-start;
+    }
+
+    /* ── INFO GRID ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+
+    .card__label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .card__label::before {
+      content: '';
+      display: block;
+      width: 14px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .card p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+    .card--highlight {
+      background: rgba(99,102,241,0.06);
+      border-color: rgba(99,102,241,0.2);
+    }
+
+    /* ── REFS ── */
+    .refs { display: flex; flex-direction: column; gap: 10px; }
+
+    .ref-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0.85rem 1.2rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      overflow: hidden;
+    }
+    .ref-link:hover { border-color: rgba(255,255,255,0.18); transform: translateX(4px); }
+    .ref-link__icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1rem;
+    }
+    .ref-link__url {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      border-left: 3px solid;
+      background: var(--bg2);
+      margin-bottom: 3rem;
+    }
+    .callout__icon {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.9rem;
+    }
+    .callout__icon .icon-emoji { font-size: 1.3rem; line-height: 1; }
+    .callout p { color: var(--muted); font-size: 0.95rem; line-height: 1.75; }
+    .callout p + p { margin-top: 0.75rem; }
+    .callout strong { color: var(--text); font-weight: 600; }
+
+    /* ── ROTEIRO CARDS ── */
+    .roteiros { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .roteiro {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .roteiro__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .roteiro__title {
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .roteiro__body { padding: 0 1.75rem; }
+
+    .script-block {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .script-block:last-child { border-bottom: none; }
+
+    .script-block__label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .script-block__text {
+      font-size: 0.93rem;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    /* ── HOOKS ROW ── */
+    .hooks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hook-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+    }
+    .hook-card__num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .hook-card__text {
+      font-size: 0.93rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* ── CTA CHIPS ── */
+    .cta-list { display: flex; flex-direction: column; gap: 10px; }
+    .cta-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 1rem 1.25rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .cta-item::before {
+      content: '→';
+      flex-shrink: 0;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* ── SCRIPT ROWS (texto + screenshot lado a lado) ── */
+    .script-rows { display: flex; flex-direction: column; }
+    .script-row {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 1.5rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .script-row:last-child { border-bottom: none; }
+    .script-row--no-img { grid-template-columns: 1fr; }
+    .script-row__text { font-size: 0.93rem; line-height: 1.75; color: var(--text); }
+    .script-row__img img {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    /* ── COMMENT SCREENSHOTS ── */
+    .comment-imgs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .comment-imgs img {
+      height: 90px;
+      width: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      cursor: zoom-in;
+      transition: opacity 0.2s;
+    }
+    .comment-imgs img:hover { opacity: 0.85; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      cursor: zoom-out;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: var(--radius); }
+
+    @media (max-width: 700px) {
+      .script-row { grid-template-columns: 1fr; }
+      .script-row__img { order: -1; }
+      .script-row__img img { max-height: 200px; width: auto; }
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 2.5rem 0;
+    }
+
+    /* ── SECTION COLOR OVERRIDES ── */
+    .v1 .v-number { color: var(--v1); }
+    .v1 .v-tag { background: rgba(110,231,183,0.1); color: var(--v1); border: 1px solid rgba(110,231,183,0.25); }
+    .v1 .callout { border-color: var(--v1); }
+
+    .v2 .v-number { color: var(--v2); }
+    .v2 .v-tag { background: rgba(147,197,253,0.1); color: var(--v2); border: 1px solid rgba(147,197,253,0.25); }
+    .v2 .callout { border-color: var(--v2); }
+
+    .v3 .v-number { color: var(--v3); }
+    .v3 .v-tag { background: rgba(249,168,212,0.1); color: var(--v3); border: 1px solid rgba(249,168,212,0.25); }
+    .v3 .callout { border-color: var(--v3); }
+
+    .v4 .v-number { color: var(--v4); }
+    .v4 .v-tag { background: rgba(252,211,77,0.1); color: var(--v4); border: 1px solid rgba(252,211,77,0.25); }
+    .v4 .callout { border-color: var(--v4); }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .footer strong { color: var(--text); }
+
+    /* ── FADE IN ANIMATION ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .hooks-grid { grid-template-columns: 1fr; }
+      .section { padding: 4rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<section class="hero">
+  <div class="hero__glow hero__glow--1"></div>
+  <div class="hero__glow hero__glow--2"></div>
+
+  <div class="hero__badge">
+    <span></span>
+    Nacional Sites &mdash; Estratégia de Conteúdo
+  </div>
+
+  <h1 class="hero__title">Roteiros<br />de Anúncio</h1>
+  <p class="hero__sub">Quatro vertentes de abordagem para testar, validar e escalar a conversão de leads qualificados.</p>
+
+  <div class="hero__cards">
+    <a class="hero__card" href="#v1"><span class="dot" style="background:var(--v1)"></span> Demonstrativos</a>
+    <a class="hero__card" href="#v2"><span class="dot" style="background:var(--v2)"></span> UGC</a>
+    <a class="hero__card" href="#v3"><span class="dot" style="background:var(--v3)"></span> Storytelling Geral</a>
+    <a class="hero__card" href="#v4"><span class="dot" style="background:var(--v4)"></span> Nichado · Estética</a>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-hint__line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav class="nav">
+  <div class="nav__inner">
+    <span class="nav__logo">Nacional Sites</span>
+    <a class="nav__link" href="#v1"><span class="chip" style="background:var(--v1)"></span> 01 · Demonstrativos</a>
+    <a class="nav__link" href="#v2"><span class="chip" style="background:var(--v2)"></span> 02 · UGC</a>
+    <a class="nav__link" href="#v3"><span class="chip" style="background:var(--v3)"></span> 03 · Storytelling</a>
+    <a class="nav__link" href="#v4"><span class="chip" style="background:var(--v4)"></span> 04 · Estética</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ VERTENTE 1 ═══════════════════════════ -->
+<section id="v1" class="section v1">
+
+  <div class="v-header fade-in">
+    <span class="v-number">Vertente 01</span>
+    <h2 class="v-title">Vídeos Demonstrativos</h2>
+    <span class="v-tag">Visual puro · Sem locutor</span>
+  </div>
+
+  <div class="info-grid fade-in">
+    <div class="card">
+      <div class="card__label">Objetivo</div>
+      <p>Testar a conversão de anúncios <strong style="color:var(--text)">sem nenhuma pessoa falando ou vendendo</strong> o projeto — conquistar o lead puramente pelo visual e um texto ou outro de apoio.</p>
+    </div>
+    <div class="card">
+      <div class="card__label">Referências</div>
+      <div class="refs">
+        <a class="ref-link" href="https://www.tiktok.com/@webloved/video/7634249644402298144" target="_blank">
+          <div class="ref-link__icon">🎬</div>
+          <div>
+            <div>@webloved · Animated Website</div>
+            <div class="ref-link__url">tiktok.com/@webloved/video/7634249644402298144</div>
+          </div>
+        </a>
+        <a class="ref-link" href="https://www.tiktok.com/@docmo.agency/video/7656409370535709984" target="_blank">
+          <div class="ref-link__icon">🎬</div>
+          <div>
+            <div>@docmo.agency · Cinematic Website</div>
+            <div class="ref-link__url">tiktok.com/@docmo.agency/video/7656409370535709984</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="comment-imgs fade-in" style="margin-bottom:2rem;">
+    <img src="./imgs/img_0.jpg" alt="Referência visual" onclick="openLightbox(this)" />
+  </div>
+
+  <div class="callout fade-in" style="border-color:var(--v1);">
+    <div class="callout__icon"><span class="icon-emoji">💡</span> Observação</div>
+    <p>Se se provar performático, é <strong>fácil de testar variações</strong> — sempre que existir um site novo ou uma frase que pode ajudar a converter, conseguimos criar mais variações em minutos.</p>
+    <p>Não sei se funciona. <strong>É fase de testes.</strong></p>
+  </div>
+
+  <div class="card fade-in">
+    <div class="card__label">Roteiros</div>
+    <p>Não tem roteiro definido. Precisa dos takes e, depois, é testar <strong style="color:var(--text)">frases, músicas e botões de CTA</strong>.</p>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════ VERTENTE 2 ═══════════════════════════ -->
+<section id="v2" class="section v2">
+
+  <div class="v-header fade-in">
+    <span class="v-number">Vertente 02</span>
+    <h2 class="v-title">Vídeos Estilo UGC</h2>
+    <span class="v-tag">Anúncio que não parece anúncio</span>
+  </div>
+
+  <div class="info-grid fade-in">
+    <div class="card">
+      <div class="card__label">Objetivo</div>
+      <p>Alguém do time assume o papel de Creator e fala do projeto como se fosse alguém de fora — segue a lógica de <strong style="color:var(--text)">vender o trabalho bom de outra pessoa, sem autopromoção</strong>.</p>
+    </div>
+    <div class="card">
+      <div class="card__label">Referências</div>
+      <div class="refs">
+        <a class="ref-link" href="https://www.tiktok.com/@oproductdesigner/video/7508867437828295992" target="_blank">
+          <div class="ref-link__icon">🎬</div>
+          <div><div>@oproductdesigner · Ref 1</div><div class="ref-link__url">video/7508867437828295992</div></div>
+        </a>
+        <a class="ref-link" href="https://www.tiktok.com/@oproductdesigner/video/7507760923008879877" target="_blank">
+          <div class="ref-link__icon">🎬</div>
+          <div><div>@oproductdesigner · Ref 2</div><div class="ref-link__url">video/7507760923008879877</div></div>
+        </a>
+        <a class="ref-link" href="https://www.tiktok.com/@oproductdesigner/video/7667330220474518792" target="_blank">
+          <div class="ref-link__icon">🎬</div>
+          <div><div>@oproductdesigner · Ref 3</div><div class="ref-link__url">video/7667330220474518792</div></div>
+        </a>
+        <a class="ref-link" href="https://www.tiktok.com/@oproductdesigner/video/7518117066663071032" target="_blank">
+          <div class="ref-link__icon">🎬</div>
+          <div><div>@oproductdesigner · Ref 4</div><div class="ref-link__url">video/7518117066663071032</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout fade-in" style="border-color:var(--v2);">
+    <div class="callout__icon"><span class="icon-emoji">🎯</span> Observação</div>
+    <p>Isso tem que soar <strong>extremamente natural</strong> — parecer que foi o vídeo de um influencer repostado pela página da Nacional.</p>
+    <p>Segue também a lógica de que <strong>anúncios que mostram o produto (site) como principal e logo no início</strong> performam melhor.</p>
+    <div class="comment-imgs">
+      <img src="./imgs/img_1.png" alt="Comentário referência 1" onclick="openLightbox(this)" />
+      <img src="./imgs/img_2.png" alt="Comentário referência 2" onclick="openLightbox(this)" />
+      <img src="./imgs/img_3.png" alt="Comentário referência 3" onclick="openLightbox(this)" />
+    </div>
+  </div>
+
+  <div class="callout fade-in" style="border-color:var(--v2); margin-top: -1rem;">
+    <div class="callout__icon"><span class="icon-emoji">📋</span> Como usar estes roteiros</div>
+    <p>Esta etapa não segue um roteiro rígido — trata-se de sugestões de abordagem para a análise de cada seção do site. Cada pessoa deve conduzir sua própria análise, preservando a essência da estrutura proposta, com destaque para o <strong>UGC e o CTA</strong>.</p>
+    <p>Os vídeos são gravados individualmente e, por definição, <strong>quem grava não atende o cliente correspondente</strong>: o atendimento é redirecionado a outro membro da equipe, para que o autor do vídeo não seja associado à empresa.</p>
+    <p>A recomendação é ler o roteiro para absorver a ideia central e, durante a gravação, falar de forma espontânea enquanto navega pelo site — <strong>a naturalidade é o que sustenta o formato.</strong></p>
+  </div>
+
+  <!-- Roteiro: Equinology -->
+  <div class="roteiros fade-in">
+    <div class="roteiro">
+      <div class="roteiro__header">
+        <div class="roteiro__title">
+          <span style="font-size:1.2rem">🌿</span> Análise Equinology
+        </div>
+        <span style="color:var(--v2); font-size:0.8rem; font-weight:600;">Roteiro 01</span>
+      </div>
+      <div class="roteiro__body">
+
+        <div class="script-block">
+          <div class="script-block__label">Hooks (variar)</div>
+          <div class="hooks-grid">
+            <div class="hook-card"><div class="hook-card__num">Hook 1</div><div class="hook-card__text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-card__num">Hook 2</div><div class="hook-card__text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-card__num">Hook 3</div><div class="hook-card__text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">Narração · com screenshots do site</div>
+          <div class="script-rows">
+            <div class="script-row">
+              <div class="script-row__text">Logo no início nós já temos essa animação cinematográfica sincronizada com a rolagem. Isso aqui tá muito bonito, sério.</div>
+              <div class="script-row__img"><img src="./imgs/img_4.png" alt="Equinology — animação inicial" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Aqui tem uma seção estática com as informações.</div>
+              <div class="script-row__img"><img src="./imgs/img_5.png" alt="Equinology — seção estática" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Mais uma animação belíssima. Sincronizada com as frases que representam a marca. Isso aqui aumenta o valor percebido demais. E é tão <em>smoothy</em> que parece que a gente tá assistindo um vídeo enquanto na verdade navega pelo site.</div>
+              <div class="script-row__img"><img src="./imgs/img_6.png" alt="Equinology — animação de marca" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Aqui começa a apresentação do produto em si, com essas telas menores interativas, deixa a experiência mais dinâmica pra quem tá navegando.</div>
+              <div class="script-row__img"><img src="./imgs/img_7.png" alt="Equinology — telas interativas" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Mais uma animação personalizada provavelmente pra retomar a atenção do visitante.</div>
+              <div class="script-row__img"><img src="./imgs/img_8.png" alt="Equinology — animação de atenção" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row script-row--no-img">
+              <div class="script-row__text">E a seção de preço e contato que, depois dessa experiência imersiva, fica muito mais tentador pra quem tá procurando o serviço.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">CTA</div>
+          <div class="cta-list">
+            <div class="cta-item">E se você acha que é hora de subir o nível da sua empresa também, clica aqui no botão do WhatsApp que o pessoal da Nacional vai te contar como funciona esse processo de criação de sites, sem compromisso.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Roteiro: Legis -->
+    <div class="roteiro">
+      <div class="roteiro__header">
+        <div class="roteiro__title">
+          <span style="font-size:1.2rem">⚖️</span> Análise Legis
+        </div>
+        <span style="color:var(--v2); font-size:0.8rem; font-weight:600;">Roteiro 02</span>
+      </div>
+      <div class="roteiro__body">
+
+        <div class="script-block">
+          <div class="script-block__label">Hooks (variar)</div>
+          <div class="hooks-grid">
+            <div class="hook-card"><div class="hook-card__num">Hook 1</div><div class="hook-card__text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-card__num">Hook 2</div><div class="hook-card__text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-card__num">Hook 3</div><div class="hook-card__text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">Narração · com screenshots do site</div>
+          <div class="script-rows">
+            <div class="script-row">
+              <div class="script-row__text">E a gente já começa com essa animação incrível sincronizada com o scroll. Parece que a gente tá realmente <em>entrando</em> no site deles. Aqui tem várias frases que reforçam a marca.</div>
+              <div class="script-row__img"><img src="./imgs/img_9.png" alt="Legis — animação inicial" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Wooow, e ele finaliza com a animação do logotipo da empresa, da Legis Dados, que ficou maravilhosa.</div>
+              <div class="script-row__img"><img src="./imgs/img_10.png" alt="Legis — logotipo animado" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Na seção seguinte a gente tem um vídeo de fundo, e a animação dos textos também sincronizada com o scroll. A experiência é tão imersiva que parece que você tá assistindo um filme enquanto conhece sobre a empresa.</div>
+              <div class="script-row__img"><img src="./imgs/img_11.png" alt="Legis — vídeo de fundo" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Depois a gente entra na seção mais técnica, que mostra de uma maneira bem lúdica pra gente os detalhes do produto/empresa.</div>
+              <div class="script-row__img"><img src="./imgs/img_12.png" alt="Legis — seção técnica" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">Pra recuperar a atenção mais uma vez tem outra animação super profissional.</div>
+              <div class="script-row__img"><img src="./imgs/img_13.png" alt="Legis — animação de atenção" onclick="openLightbox(this)" /></div>
+            </div>
+            <div class="script-row">
+              <div class="script-row__text">E por fim o preço, que, depois de toda essa experiência que é esse site, fica difícil não fechar.</div>
+              <div class="script-row__img"><img src="./imgs/img_14.png" alt="Legis — seção de preço" onclick="openLightbox(this)" /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">CTA</div>
+          <div class="cta-list">
+            <div class="cta-item">E se você também quer um site desse, que representa o valor real da sua empresa, a Nacional é referência em qualidade e agilidade. Clica aqui no botão e entra em contato com eles.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════ VERTENTE 3 ═══════════════════════════ -->
+<section id="v3" class="section v3">
+
+  <div class="v-header fade-in">
+    <span class="v-number">Vertente 03</span>
+    <h2 class="v-title">Storytelling Generalista</h2>
+    <span class="v-tag">Dor geral · Sem nicho</span>
+  </div>
+
+  <div class="info-grid fade-in">
+    <div class="card">
+      <div class="card__label">Objetivo</div>
+      <p>Trabalhar focado na dor geral do público — não chegar falando "seu site é ruim", mas <strong style="color:var(--text)">simpatizar com dores generalistas</strong> e relacioná-las ao site.</p>
+      <div class="divider"></div>
+      <p>O meio do texto permanece fixo. A gente varia <strong style="color:var(--text)">Hook, CTA e a pessoa falando</strong>. Um roteiro rende ~6 vídeos pra testar performance facilmente.</p>
+    </div>
+    <div class="card">
+      <div class="card__label">Observações estratégicas</div>
+      <p>Trabalhou-se a quebra de <strong style="color:var(--text)">duas crenças limitantes</strong>: tempo e dinheiro.</p>
+      <div class="divider"></div>
+      <p>Ancorei o preço na casa dos <strong style="color:var(--text)">15k</strong>, mencionei que hoje está mais barato — então (na minha cabeça, me corrijam se eu estiver errado) o cliente já vem imaginando algo entre 4–6k facilmente. Talvez a gente perca um ou outro de 10k/15k, mas acho que aumentará muito o retorno por parte dos leads dispostos a pagar entre 4–6k, e aí no final fica elas por elas.</p>
+      <div class="divider"></div>
+      <p>Edição variada: alguns <strong style="color:var(--text)">stories casuais</strong>, outros <strong style="color:var(--text)">reels mais editados</strong>. Em um o site aparece logo de cara, em outros não — testamos e validamos a tese.</p>
+    </div>
+  </div>
+
+  <!-- Roteiro A -->
+  <div class="roteiros fade-in">
+    <div class="roteiro">
+      <div class="roteiro__header">
+        <div class="roteiro__title"><span style="font-size:1.2rem">💼</span> Roteiro A · Valor Percebido</div>
+        <span style="color:var(--v3); font-size:0.8rem; font-weight:600;">Generalista</span>
+      </div>
+      <div class="roteiro__body">
+
+        <div class="script-block">
+          <div class="script-block__label">Ganchos (testar)</div>
+          <div class="hooks-grid">
+            <div class="hook-card">
+              <div class="hook-card__num">Gancho 1</div>
+              <div class="hook-card__text">Você sente que cobra menos do que sabe que seu serviço vale?</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-card__num">Gancho 2</div>
+              <div class="hook-card__text">O seu site mostra o verdadeiro valor do seu negócio hoje?</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">Corpo (fixo)</div>
+          <div class="script-block__text">
+            A verdade é que, hoje em dia, além de ser o melhor você precisa <em>parecer</em>.<br><br>
+            Antigamente, uma página que mostrava isso custava mais de quinze mil reais e levava meses para ser construída. Mas com o método e a tecnologia que a gente tem hoje, leva uma semana, e custa muito menos.<br><br>
+            A LegisDados, uma solução de tecnologia no direito, já fez. E hoje ela é percebida como referência no mercado por quem passa pelo site.
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">CTAs (testar)</div>
+          <div class="cta-list">
+            <div class="cta-item">Me manda o nome do seu negócio no botão aqui embaixo que eu te mostro como ficaria a sua página. Sem custo.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Roteiro B -->
+    <div class="roteiro">
+      <div class="roteiro__header">
+        <div class="roteiro__title"><span style="font-size:1.2rem">📈</span> Roteiro B · Concorrência</div>
+        <span style="color:var(--v3); font-size:0.8rem; font-weight:600;">Generalista</span>
+      </div>
+      <div class="roteiro__body">
+
+        <div class="script-block">
+          <div class="script-block__label">Ganchos (testar)</div>
+          <div class="hooks-grid">
+            <div class="hook-card">
+              <div class="hook-card__num">Gancho 1</div>
+              <div class="hook-card__text">Quando um potencial cliente entra no seu site, essa pessoa fica encantada?</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-card__num">Gancho 2</div>
+              <div class="hook-card__text">O que o cliente pensa sobre você depois que ele visita seu site?</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-card__num">Gancho 3</div>
+              <div class="hook-card__text">Como o seu site te posiciona em relação à concorrência?</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">Corpo (fixo)</div>
+          <div class="script-block__text">
+            A gente sabe que o mercado está ficando mais difícil. Não encantar no primeiro contato pode estar te fazendo perder cliente para a concorrência, mesmo que você seja melhor.<br><br>
+            Mas calma, tem uma coisa boa no meio disso: antes eram necessários meses para fazer um projeto desse, e custava, pelo menos, uns quinze mil reais.<br><br>
+            Hoje leva uma semana e custa muito menos. E por causa disso, já tem gente usando pra mostrar que é a melhor solução do mercado.<br><br>
+            A Equinology, por exemplo, se antecipou e fez mês passado.
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">CTAs (testar)</div>
+          <div class="cta-list">
+            <div class="cta-item">Por isso, se você também quer ser referência no seu mercado, clique no "saiba mais" e vamos conversar.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════ VERTENTE 4 ═══════════════════════════ -->
+<section id="v4" class="section v4">
+
+  <div class="v-header fade-in">
+    <span class="v-number">Vertente 04</span>
+    <h2 class="v-title">Storytelling Nichado<br /><span style="color:var(--v4)">Estética</span></h2>
+    <span class="v-tag">Dentistas · Biomédicos · Clínicas</span>
+  </div>
+
+  <div class="info-grid fade-in">
+    <div class="card">
+      <div class="card__label">Objetivo</div>
+      <p>Direcionar anúncios para públicos específicos com poder aquisitivo — aumentar a conversão de <strong style="color:var(--text)">leads qualificados</strong>.</p>
+    </div>
+    <div class="card">
+      <div class="card__label">Por que Estética?</div>
+      <p>Além de ser um nicho com dinheiro, é um nicho que <strong style="color:var(--text)">preza muito pela aparência</strong>. Um discurso relacionado ao valor agregado, à busca por pacientes melhores e à forma de se posicionar é exatamente o que compra essa galera.</p>
+    </div>
+  </div>
+
+  <div class="callout fade-in" style="border-color:var(--v4);">
+    <div class="callout__icon"><span class="icon-emoji">✨</span> Sugestão</div>
+    <p><strong>Sugestão:</strong> Começar pelas clínicas lideradas por mulheres e deixar esses anúncios e reuniões com quem tem melhor fit de abordagem para esse perfil de cliente.</p>
+  </div>
+
+  <div class="roteiros fade-in">
+    <div class="roteiro">
+      <div class="roteiro__header">
+        <div class="roteiro__title"><span style="font-size:1.2rem">💉</span> Roteiro Estética · Valor e posicionamento</div>
+        <span style="color:var(--v4); font-size:0.8rem; font-weight:600;">Nichado</span>
+      </div>
+      <div class="roteiro__body">
+
+        <div class="script-block">
+          <div class="script-block__label">Hooks (testar)</div>
+          <div class="hooks-grid">
+            <div class="hook-card">
+              <div class="hook-card__num">Hook 1</div>
+              <div class="hook-card__text">Se você trabalha com estética, fica aqui comigo.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-card__num">Hook 2</div>
+              <div class="hook-card__text">Se você não trabalha com estética, pode pular esse vídeo.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-card__num">Hook 3</div>
+              <div class="hook-card__text">Não ter um site profissional pode estar fazendo seu cliente te comparar apenas por preço.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">Corpo</div>
+          <div class="script-block__text">
+            É péssimo quando o cliente ignora toda sua qualidade e chega perguntando só por preço, né?<br><br>
+            Mas deixa eu te contar, <strong>o problema não é você.</strong><br><br>
+            É o que acontece <em>antes</em> do paciente chegar em você.<br><br>
+            Geralmente, quem chega direto do Instagram te compara só pelo preço. E sem um contexto, todo preço parece alto.<br><br>
+            Mas a parte boa é que a solução é muito simples:<br><br>
+            Ter um lugar para mandar essa pessoa antes dela solicitar orçamento. Como um site que mostre sua formação, seus casos, seu protocolo. Mas que acima disso, mostre visualmente o seu valor como profissional.<br><br>
+            Antigamente fazer sites assim custava mais de dez, quinze mil reais e levava meses.<br><br>
+            Hoje leva uma semana e custa uma fração disso.<br><br>
+            E além de te ajudar com os clientes, <strong>te enche de orgulho.</strong>
+          </div>
+        </div>
+
+        <div class="script-block">
+          <div class="script-block__label">CTAs (testar)</div>
+          <div class="cta-list">
+            <div class="cta-item">Se você quer ser a doutora que <em>escolhe</em> os clientes, clica em Saiba Mais para a gente desenvolver um site à altura.</div>
+            <div class="cta-item">Se você quer parar de justificar seu preço no WhatsApp, clica em Saiba Mais.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer class="footer">
+  <strong>Nacional Sites</strong> &nbsp;·&nbsp; Roteiros de Anúncio &nbsp;·&nbsp; 4 Vertentes
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Lightbox
+  function openLightbox(img) {
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
