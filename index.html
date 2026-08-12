@@ -168,10 +168,56 @@
     }
     @keyframes scrollLine { 0%,100% { transform: scaleY(1); opacity:1; } 50% { transform: scaleY(0.5); opacity:0.4; } }
 
+    /* ── Site header ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(7,7,15,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .site-header__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-header__logo {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.65);
+    }
+    .page-switcher {
+      display: flex;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .ps-btn {
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      color: rgba(255,255,255,0.4);
+      transition: color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .ps-btn:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
+    .ps-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+
     /* ── NAV ── */
     .nav {
       position: sticky;
-      top: 0;
+      top: 52px;
       z-index: 100;
       background: rgba(7,7,15,0.85);
       backdrop-filter: blur(24px);
@@ -571,6 +617,16 @@
   </style>
 </head>
 <body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <span class="site-header__logo">Nacional Sites</span>
+    <nav class="page-switcher">
+      <a href="index.html" class="ps-btn active">Roteiros</a>
+      <a href="gravacoes.html" class="ps-btn">Gravações</a>
+    </nav>
+  </div>
+</header>
 
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
 <section class="hero">

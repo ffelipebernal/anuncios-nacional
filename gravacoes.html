@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gravações – Nacional Sites</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f0f0f;
+      color: #e8e8e8;
+      min-height: 100vh;
+    }
+
+    /* ── Site header ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(7,7,15,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .site-header__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-header__logo {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.65);
+    }
+    .page-switcher {
+      display: flex;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .ps-btn {
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      color: rgba(255,255,255,0.4);
+      transition: color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .ps-btn:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
+    .ps-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* ── Tab bar ── */
+    .tab-bar {
+      display: flex;
+      gap: 2px;
+      background: #1a1a1a;
+      padding: 16px 24px 0;
+      border-bottom: 2px solid #2a2a2a;
+      overflow-x: auto;
+      position: sticky;
+      top: 52px;
+      z-index: 100;
+    }
+
+    .tab-btn {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      background: #252525;
+      color: #888;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: 0.3px;
+    }
+    .tab-btn:hover { background: #303030; color: #ccc; }
+    .tab-btn.active {
+      background: #1a1a1a;
+      color: #ffffff;
+      border-top: 2px solid #6c63ff;
+      margin-bottom: -2px;
+      padding-bottom: 12px;
+    }
+    [data-tab="maria"].active   { border-top-color: #c084fc !important; }
+    [data-tab="almada"].active  { border-top-color: #60a5fa !important; }
+    [data-tab="stel"].active    { border-top-color: #34d399 !important; }
+    [data-tab="felipe"].active  { border-top-color: #fb923c !important; }
+    [data-tab="takes"].active   { border-top-color: #ff6b6b !important; }
+
+    /* ── Pages ── */
+    .page { display: none; padding: 36px 32px; max-width: 900px; }
+    .page.active { display: block; }
+
+    /* ── Person header ── */
+    .person-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+    .person-header h1 { font-size: 26px; font-weight: 700; }
+
+    .avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; flex-shrink: 0;
+    }
+    .av-maria  { background: #1a0e2a; color: #c084fc; border: 1px solid #3b1f5e; }
+    .av-almada { background: #0e1a2a; color: #60a5fa; border: 1px solid #1f3b5e; }
+    .av-stel   { background: #0e2a1a; color: #34d399; border: 1px solid #1f5e3b; }
+    .av-felipe { background: #2a1a0e; color: #fb923c; border: 1px solid #5e3b1f; }
+
+    /* ── Note box ── */
+    .note {
+      background: #1e1a00;
+      border-left: 3px solid #f5c542;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-size: 13.5px;
+      color: #d4b84a;
+      line-height: 1.6;
+    }
+
+    /* ── Section card ── */
+    .card {
+      background: #1c1c1c;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card > h2 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    /* ── Checklist ── */
+    .checklist { display: flex; flex-direction: column; gap: 10px; }
+
+    .check-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #212121;
+      border: 1px solid #2e2e2e;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .check-item:hover { background: #272727; }
+    .check-item.done { background: #0d1f0d; border-color: #1a4a1a; }
+    .check-item.done .check-label { text-decoration: line-through; color: #4a7a4a; }
+
+    .check-box {
+      width: 20px; height: 20px;
+      border-radius: 5px;
+      border: 2px solid #444;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    .check-item.done .check-box { background: #2e7d32; border-color: #2e7d32; }
+    .check-box svg { display: none; }
+    .check-item.done .check-box svg { display: block; }
+    .check-label { font-size: 15px; font-weight: 500; }
+
+    /* ── Progress bar ── */
+    .progress-wrap { margin-top: 16px; }
+    .progress-text { font-size: 12px; color: #555; margin-bottom: 6px; }
+    .progress-bar { height: 5px; background: #2a2a2a; border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; transition: width 0.3s ease; }
+    .pf-maria  { background: #c084fc; }
+    .pf-almada { background: #60a5fa; }
+    .pf-stel   { background: #34d399; }
+    .pf-felipe { background: #fb923c; }
+
+    /* ══════════════════════════════════════
+       ROTEIROS DE PREPARAÇÃO
+    ══════════════════════════════════════ */
+    .roteiros-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #555;
+      margin-bottom: 14px;
+      margin-top: 2px;
+    }
+
+    details.rp {
+      background: #212121;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    details.rp[open] { border-color: #3a3a3a; }
+
+    details.rp summary {
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      list-style: none;
+      user-select: none;
+      transition: background 0.12s;
+    }
+    details.rp summary::-webkit-details-marker { display: none; }
+    details.rp summary:hover { background: #272727; }
+    details.rp[open] summary { border-bottom: 1px solid #2e2e2e; background: #1e1e1e; }
+
+    .rp-arrow {
+      margin-left: auto;
+      font-size: 11px;
+      color: #555;
+      transition: transform 0.2s;
+    }
+    details.rp[open] .rp-arrow { transform: rotate(90deg); }
+
+    .rp-body { padding: 20px 16px; display: flex; flex-direction: column; gap: 20px; }
+
+    .rp-section-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: #555;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    /* Hook cards inside roteiros */
+    .hook-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 8px;
+    }
+    .hook-card {
+      background: #1a1a1a;
+      border: 1px solid #2e2e2e;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .hook-num {
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #555; margin-bottom: 5px;
+    }
+    .hook-text { font-size: 13.5px; line-height: 1.55; color: #d0d0d0; }
+
+    /* Script lines */
+    .script-lines { display: flex; flex-direction: column; gap: 10px; }
+
+    .script-line {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .script-line.has-img {
+      display: grid;
+      grid-template-columns: 1fr 110px;
+      gap: 12px;
+      align-items: start;
+    }
+    .script-line p { font-size: 14px; line-height: 1.75; color: #d0d0d0; }
+    .script-line img {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #2a2a2a;
+      cursor: zoom-in;
+      transition: opacity 0.2s;
+    }
+    .script-line img:hover { opacity: 0.85; }
+
+    @media (max-width: 600px) {
+      .script-line.has-img { grid-template-columns: 1fr; }
+    }
+
+    /* Corpo block */
+    .corpo-block {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 1.85;
+      color: #d0d0d0;
+    }
+
+    /* CTA block */
+    .cta-block {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-left: 3px solid #6c63ff;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #d0d0d0;
+      margin-bottom: 8px;
+    }
+    .cta-block:last-child { margin-bottom: 0; }
+    .cta-block::before { content: '→ '; font-weight: 700; color: #6c63ff; }
+
+    /* ── Takes Gerais ── */
+    .takes-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+    .takes-header h1 { font-size: 26px; font-weight: 700; }
+    .takes-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: #1f1018;
+      border: 1px solid #3a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+    }
+
+    .takes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .takes-person-card {
+      background: #1c1c1c;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .takes-person-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px; padding-bottom: 12px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .takes-person-header .avatar { width: 36px; height: 36px; font-size: 14px; }
+    .takes-person-header span { font-size: 15px; font-weight: 600; }
+
+    .takes-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .take-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      background: #212121;
+      border: 1px solid #2a2a2a;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .take-item:hover { background: #272727; }
+    .take-item.done { background: #0d1f0d; border-color: #1a4a1a; }
+    .take-item.done .take-label { text-decoration: line-through; color: #4a7a4a; }
+
+    .take-box {
+      width: 17px; height: 17px;
+      border-radius: 4px;
+      border: 2px solid #3a3a3a;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    .take-item.done .take-box { background: #2e7d32; border-color: #2e7d32; }
+    .take-box svg { display: none; }
+    .take-item.done .take-box svg { display: block; }
+    .take-label { font-size: 13.5px; }
+
+    /* ── Audio player (Felipe only) ── */
+    .audio-prep {
+      background: linear-gradient(135deg, #221508, #1a1008);
+      border: 1px solid #7c4a1a;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .audio-prep-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: #fb923c;
+    }
+
+    .audio-prep audio {
+      width: 100%;
+      height: 40px;
+      border-radius: 6px;
+      accent-color: #fb923c;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      cursor: zoom-out;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <span class="site-header__logo">Nacional Sites</span>
+    <nav class="page-switcher">
+      <a href="index.html" class="ps-btn">Roteiros</a>
+      <a href="gravacoes.html" class="ps-btn active">Gravações</a>
+    </nav>
+  </div>
+</header>
+
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="maria">Maria</button>
+  <button class="tab-btn" data-tab="almada">João Almada</button>
+  <button class="tab-btn" data-tab="stel">João Stel</button>
+  <button class="tab-btn" data-tab="felipe">Felipe</button>
+  <button class="tab-btn" data-tab="takes">Takes Gerais</button>
+</nav>
+
+<!-- SVG check shared -->
+<svg style="display:none">
+  <symbol id="chk" viewBox="0 0 12 9"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+  <symbol id="chks" viewBox="0 0 10 7"><path d="M1 3L3.5 5.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+</svg>
+
+<!-- ══════════════════ MARIA ══════════════════ -->
+<div class="page active" id="page-maria">
+  <div class="person-header">
+    <div class="avatar av-maria">M</div>
+    <h1>Maria</h1>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="card">
+    <h2>Checklist de gravação</h2>
+    <div class="checklist">
+      <div class="check-item" data-id="maria-0" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Análise Equinology</span>
+      </div>
+      <div class="check-item" data-id="maria-1" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Análise Legis</span>
+      </div>
+      <div class="check-item" data-id="maria-2" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro A – Valor Percebido</span>
+      </div>
+      <div class="check-item" data-id="maria-3" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro Estética – Valor e posicionamento</span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-text" id="prog-text-maria">0 de 4 gravados</div>
+      <div class="progress-bar"><div class="progress-fill pf-maria" id="prog-fill-maria" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- ROTEIROS -->
+  <div class="card">
+    <h2>Roteiros para preparação</h2>
+
+    <!-- Equinology -->
+    <details class="rp">
+      <summary>🌿 Análise Equinology <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Narração — com screenshots do site</div>
+          <div class="script-lines">
+            <div class="script-line has-img">
+              <p>Logo no início nós já temos essa animação cinematográfica sincronizada com a rolagem. Isso aqui tá muito bonito, sério.</p>
+              <img src="./imgs/img_4.png" alt="Equinology — animação inicial" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Aqui tem uma seção estática com as informações.</p>
+              <img src="./imgs/img_5.png" alt="Equinology — seção estática" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Mais uma animação belíssima. Sincronizada com as frases que representam a marca. Isso aqui aumenta o valor percebido demais. E é tão <em>smoothy</em> que parece que a gente tá assistindo um vídeo enquanto na verdade navega pelo site.</p>
+              <img src="./imgs/img_6.png" alt="Equinology — animação de marca" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Aqui começa a apresentação do produto em si, com essas telas menores interativas, deixa a experiência mais dinâmica pra quem tá navegando.</p>
+              <img src="./imgs/img_7.png" alt="Equinology — telas interativas" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Mais uma animação personalizada provavelmente pra retomar a atenção do visitante.</p>
+              <img src="./imgs/img_8.png" alt="Equinology — animação de atenção" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line">
+              <p>E a seção de preço e contato que, depois dessa experiência imersiva, fica muito mais tentador pra quem tá procurando o serviço.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">E se você acha que é hora de subir o nível da sua empresa também, clica aqui no botão do WhatsApp que o pessoal da Nacional vai te contar como funciona esse processo de criação de sites, sem compromisso.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Legis -->
+    <details class="rp">
+      <summary>⚖️ Análise Legis <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Narração — com screenshots do site</div>
+          <div class="script-lines">
+            <div class="script-line has-img">
+              <p>E a gente já começa com essa animação incrível sincronizada com o scroll. Parece que a gente tá realmente <em>entrando</em> no site deles. Aqui tem várias frases que reforçam a marca.</p>
+              <img src="./imgs/img_9.png" alt="Legis — animação inicial" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Wooow, e ele finaliza com a animação do logotipo da empresa, da Legis Dados, que ficou maravilhosa.</p>
+              <img src="./imgs/img_10.png" alt="Legis — logotipo animado" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Na seção seguinte a gente tem um vídeo de fundo, e a animação dos textos também sincronizada com o scroll. A experiência é tão imersiva que parece que você tá assistindo um filme enquanto conhece sobre a empresa.</p>
+              <img src="./imgs/img_11.png" alt="Legis — vídeo de fundo" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Depois a gente entra na seção mais técnica, que mostra de uma maneira bem lúdica pra gente os detalhes do produto/empresa.</p>
+              <img src="./imgs/img_12.png" alt="Legis — seção técnica" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Pra recuperar a atenção mais uma vez tem outra animação super profissional.</p>
+              <img src="./imgs/img_13.png" alt="Legis — animação de atenção" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>E por fim o preço, que, depois de toda essa experiência que é esse site, fica difícil não fechar.</p>
+              <img src="./imgs/img_14.png" alt="Legis — seção de preço" onclick="openLightbox(this)" />
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">E se você também quer um site desse, que representa o valor real da sua empresa, a Nacional é referência em qualidade e agilidade. Clica aqui no botão e entra em contato com eles.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Roteiro A -->
+    <details class="rp">
+      <summary>💼 Roteiro A – Valor Percebido <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Ganchos — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Gancho 1</div><div class="hook-text">Você sente que cobra menos do que sabe que seu serviço vale?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 2</div><div class="hook-text">O seu site mostra o verdadeiro valor do seu negócio hoje?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 3</div><div class="hook-text">O que o cliente pensa sobre a sua empresa quando entra no seu site?</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo — fixo</div>
+          <div class="corpo-block">
+            A verdade é que, hoje em dia, além de ser o melhor você precisa <em>parecer</em>.<br><br>
+            Antigamente, uma página que mostrava isso custava mais de quinze mil reais e levava meses para ser construída. Mas com o método e a tecnologia que a gente tem hoje, leva uma semana, e custa muito menos.<br><br>
+            A LegisDados, uma solução de tecnologia no direito, já fez. E hoje ela é percebida como referência no mercado por quem passa pelo site.
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">Clique aqui e vamos conversar para fazer o seu site também.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Roteiro Estética -->
+    <details class="rp">
+      <summary>💉 Roteiro Estética – Valor e posicionamento <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Se você trabalha com estética, fica aqui comigo.</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">Se você não trabalha com estética, pode pular esse vídeo.</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">Não ter um site profissional pode estar fazendo seu cliente te comparar apenas por preço.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo</div>
+          <div class="corpo-block">
+            Sabe quando chega um cliente que só tá buscando o preço mais baixo? É péssimo né.<br><br>
+            Mas deixa eu te contar, o problema não é necessariamente você.<br><br>
+            É o que acontece <em>antes</em> do paciente chegar em você.<br><br>
+            Geralmente, quem chega direto do Instagram te compara só pelo preço. E sem um contexto, todo preço parece alto.<br><br>
+            Mas a parte boa é que a solução é muito simples:<br><br>
+            Ter um lugar para mandar essa pessoa antes dela solicitar orçamento. Como um site que mostre sua formação, seus casos, seu protocolo. Mas que acima disso, mostre visualmente o seu valor como profissional.<br><br>
+            Antigamente fazer sites assim custava mais de dez, quinze mil reais e levava meses.<br><br>
+            Hoje leva uma semana e custa uma fração disso.<br><br>
+            E além de te ajudar com os clientes, <strong>te enche de orgulho.</strong>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTAs — escolha um para variar</div>
+          <div class="cta-block">Se você quer ser a doutora que <em>escolhe</em> os clientes, clica em Saiba Mais para a gente desenvolver um site à altura.</div>
+          <div class="cta-block">Então se você quer parar de justificar seu preço no WhatsApp, clica em Saiba Mais.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ══════════════════ JOÃO ALMADA ══════════════════ -->
+<div class="page" id="page-almada">
+  <div class="person-header">
+    <div class="avatar av-almada">JA</div>
+    <h1>João Almada</h1>
+  </div>
+
+  <div class="card">
+    <h2>Checklist de gravação</h2>
+    <div class="checklist">
+      <div class="check-item" data-id="almada-0" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Análise Equinology</span>
+      </div>
+      <div class="check-item" data-id="almada-1" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Análise Legis</span>
+      </div>
+      <div class="check-item" data-id="almada-2" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro A – Valor Percebido</span>
+      </div>
+      <div class="check-item" data-id="almada-3" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro B – Concorrência</span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-text" id="prog-text-almada">0 de 4 gravados</div>
+      <div class="progress-bar"><div class="progress-fill pf-almada" id="prog-fill-almada" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Roteiros para preparação</h2>
+
+    <details class="rp">
+      <summary>🌿 Análise Equinology <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Narração — com screenshots do site</div>
+          <div class="script-lines">
+            <div class="script-line has-img">
+              <p>Logo no início nós já temos essa animação cinematográfica sincronizada com a rolagem. Isso aqui tá muito bonito, sério.</p>
+              <img src="./imgs/img_4.png" alt="Equinology — animação inicial" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Aqui tem uma seção estática com as informações.</p>
+              <img src="./imgs/img_5.png" alt="Equinology — seção estática" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Mais uma animação belíssima. Sincronizada com as frases que representam a marca. Isso aqui aumenta o valor percebido demais. E é tão <em>smoothy</em> que parece que a gente tá assistindo um vídeo enquanto na verdade navega pelo site.</p>
+              <img src="./imgs/img_6.png" alt="Equinology — animação de marca" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Aqui começa a apresentação do produto em si, com essas telas menores interativas, deixa a experiência mais dinâmica pra quem tá navegando.</p>
+              <img src="./imgs/img_7.png" alt="Equinology — telas interativas" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Mais uma animação personalizada provavelmente pra retomar a atenção do visitante.</p>
+              <img src="./imgs/img_8.png" alt="Equinology — animação de atenção" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line">
+              <p>E a seção de preço e contato que, depois dessa experiência imersiva, fica muito mais tentador pra quem tá procurando o serviço.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">E se você acha que é hora de subir o nível da sua empresa também, clica aqui no botão do WhatsApp que o pessoal da Nacional vai te contar como funciona esse processo de criação de sites, sem compromisso.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>⚖️ Análise Legis <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Narração — com screenshots do site</div>
+          <div class="script-lines">
+            <div class="script-line has-img">
+              <p>E a gente já começa com essa animação incrível sincronizada com o scroll. Parece que a gente tá realmente <em>entrando</em> no site deles. Aqui tem várias frases que reforçam a marca.</p>
+              <img src="./imgs/img_9.png" alt="Legis — animação inicial" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Wooow, e ele finaliza com a animação do logotipo da empresa, da Legis Dados, que ficou maravilhosa.</p>
+              <img src="./imgs/img_10.png" alt="Legis — logotipo animado" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Na seção seguinte a gente tem um vídeo de fundo, e a animação dos textos também sincronizada com o scroll. A experiência é tão imersiva que parece que você tá assistindo um filme enquanto conhece sobre a empresa.</p>
+              <img src="./imgs/img_11.png" alt="Legis — vídeo de fundo" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Depois a gente entra na seção mais técnica, que mostra de uma maneira bem lúdica pra gente os detalhes do produto/empresa.</p>
+              <img src="./imgs/img_12.png" alt="Legis — seção técnica" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Pra recuperar a atenção mais uma vez tem outra animação super profissional.</p>
+              <img src="./imgs/img_13.png" alt="Legis — animação de atenção" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>E por fim o preço, que, depois de toda essa experiência que é esse site, fica difícil não fechar.</p>
+              <img src="./imgs/img_14.png" alt="Legis — seção de preço" onclick="openLightbox(this)" />
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">E se você também quer um site desse, que representa o valor real da sua empresa, a Nacional é referência em qualidade e agilidade. Clica aqui no botão e entra em contato com eles.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>💼 Roteiro A – Valor Percebido <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Ganchos — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Gancho 1</div><div class="hook-text">Você sente que cobra menos do que sabe que seu serviço vale?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 2</div><div class="hook-text">O seu site mostra o verdadeiro valor do seu negócio hoje?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 3</div><div class="hook-text">O que o cliente pensa sobre a sua empresa quando entra no seu site?</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo — fixo</div>
+          <div class="corpo-block">
+            A verdade é que, hoje em dia, além de ser o melhor você precisa <em>parecer</em>.<br><br>
+            Antigamente, uma página que mostrava isso custava mais de quinze mil reais e levava meses para ser construída. Mas com o método e a tecnologia que a gente tem hoje, leva uma semana, e custa muito menos.<br><br>
+            A LegisDados, uma solução de tecnologia no direito, já fez. E hoje ela é percebida como referência no mercado por quem passa pelo site.
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">Clique aqui e vamos conversar para fazer o seu site também.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>📈 Roteiro B – Concorrência <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Ganchos — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Gancho 1</div><div class="hook-text">Quando um potencial cliente entra no seu site, essa pessoa fica encantada?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 2</div><div class="hook-text">O que o cliente pensa sobre você depois que ele visita seu site?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 3</div><div class="hook-text">Como o seu site te posiciona em relação à concorrência?</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo — fixo</div>
+          <div class="corpo-block">
+            A gente sabe que o mercado está ficando mais difícil. Não encantar no primeiro contato pode estar te fazendo perder cliente para a concorrência, mesmo que você seja melhor.<br><br>
+            Mas calma, tem uma coisa boa no meio disso: antes eram necessários meses para fazer um projeto desse, e custava, pelo menos, uns quinze mil reais.<br><br>
+            Hoje leva uma semana e custa muito menos. E por causa disso, já tem gente usando pra mostrar que é a melhor solução do mercado.<br><br>
+            A Equinology, por exemplo, se antecipou e fez mês passado.
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">Por isso, se você também quer ser referência no seu mercado, clique no "saiba mais" e vamos conversar.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ══════════════════ JOÃO STEL ══════════════════ -->
+<div class="page" id="page-stel">
+  <div class="person-header">
+    <div class="avatar av-stel">JS</div>
+    <h1>João Stel</h1>
+  </div>
+
+  <div class="note">
+    ⚠️ João Stel não grava as análises porque ele pode acabar aparecendo para o cliente em alguma etapa do projeto, então não é legal vincular ele como um "ugc" e depois a galera pensar "opa, esse cara aqui é o dono?"
+  </div>
+
+  <div class="card">
+    <h2>Checklist de gravação</h2>
+    <div class="checklist">
+      <div class="check-item" data-id="stel-0" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro A – Valor Percebido</span>
+      </div>
+      <div class="check-item" data-id="stel-1" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro B – Concorrência</span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-text" id="prog-text-stel">0 de 2 gravados</div>
+      <div class="progress-bar"><div class="progress-fill pf-stel" id="prog-fill-stel" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Roteiros para preparação</h2>
+
+    <details class="rp">
+      <summary>💼 Roteiro A – Valor Percebido <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Ganchos — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Gancho 1</div><div class="hook-text">Você sente que cobra menos do que sabe que seu serviço vale?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 2</div><div class="hook-text">O seu site mostra o verdadeiro valor do seu negócio hoje?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 3</div><div class="hook-text">O que o cliente pensa sobre a sua empresa quando entra no seu site?</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo — fixo</div>
+          <div class="corpo-block">
+            A verdade é que, hoje em dia, além de ser o melhor você precisa <em>parecer</em>.<br><br>
+            Antigamente, uma página que mostrava isso custava mais de quinze mil reais e levava meses para ser construída. Mas com o método e a tecnologia que a gente tem hoje, leva uma semana, e custa muito menos.<br><br>
+            A LegisDados, uma solução de tecnologia no direito, já fez. E hoje ela é percebida como referência no mercado por quem passa pelo site.
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">Clique aqui e vamos conversar para fazer o seu site também.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>📈 Roteiro B – Concorrência <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Ganchos — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Gancho 1</div><div class="hook-text">Quando um potencial cliente entra no seu site, essa pessoa fica encantada?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 2</div><div class="hook-text">O que o cliente pensa sobre você depois que ele visita seu site?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 3</div><div class="hook-text">Como o seu site te posiciona em relação à concorrência?</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo — fixo</div>
+          <div class="corpo-block">
+            A gente sabe que o mercado está ficando mais difícil. Não encantar no primeiro contato pode estar te fazendo perder cliente para a concorrência, mesmo que você seja melhor.<br><br>
+            Mas calma, tem uma coisa boa no meio disso: antes eram necessários meses para fazer um projeto desse, e custava, pelo menos, uns quinze mil reais.<br><br>
+            Hoje leva uma semana e custa muito menos. E por causa disso, já tem gente usando pra mostrar que é a melhor solução do mercado.<br><br>
+            A Equinology, por exemplo, se antecipou e fez mês passado.
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">Por isso, se você também quer ser referência no seu mercado, clique no "saiba mais" e vamos conversar.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ══════════════════ FELIPE ══════════════════ -->
+<div class="page" id="page-felipe">
+  <div class="person-header">
+    <div class="avatar av-felipe">F</div>
+    <h1>Felipe</h1>
+  </div>
+
+  <div class="card">
+    <h2>Checklist de gravação</h2>
+    <div class="checklist">
+      <div class="check-item" data-id="felipe-0" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Análise Equinology</span>
+      </div>
+      <div class="check-item" data-id="felipe-1" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Análise Legis</span>
+      </div>
+      <div class="check-item" data-id="felipe-2" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro A – Valor Percebido</span>
+      </div>
+      <div class="check-item" data-id="felipe-3" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro B – Concorrência</span>
+      </div>
+      <div class="check-item" data-id="felipe-4" onclick="toggle(this)">
+        <div class="check-box"><svg width="12" height="9"><use href="#chk"/></svg></div>
+        <span class="check-label">Roteiro Estética – Valor e posicionamento</span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-text" id="prog-text-felipe">0 de 5 gravados</div>
+      <div class="progress-bar"><div class="progress-fill pf-felipe" id="prog-fill-felipe" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Roteiros para preparação</h2>
+
+    <details class="rp">
+      <summary>🌿 Análise Equinology <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Narração — com screenshots do site</div>
+          <div class="script-lines">
+            <div class="script-line has-img">
+              <p>Logo no início nós já temos essa animação cinematográfica sincronizada com a rolagem. Isso aqui tá muito bonito, sério.</p>
+              <img src="./imgs/img_4.png" alt="Equinology — animação inicial" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Aqui tem uma seção estática com as informações.</p>
+              <img src="./imgs/img_5.png" alt="Equinology — seção estática" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Mais uma animação belíssima. Sincronizada com as frases que representam a marca. Isso aqui aumenta o valor percebido demais. E é tão <em>smoothy</em> que parece que a gente tá assistindo um vídeo enquanto na verdade navega pelo site.</p>
+              <img src="./imgs/img_6.png" alt="Equinology — animação de marca" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Aqui começa a apresentação do produto em si, com essas telas menores interativas, deixa a experiência mais dinâmica pra quem tá navegando.</p>
+              <img src="./imgs/img_7.png" alt="Equinology — telas interativas" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Mais uma animação personalizada provavelmente pra retomar a atenção do visitante.</p>
+              <img src="./imgs/img_8.png" alt="Equinology — animação de atenção" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line">
+              <p>E a seção de preço e contato que, depois dessa experiência imersiva, fica muito mais tentador pra quem tá procurando o serviço.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">E se você acha que é hora de subir o nível da sua empresa também, clica aqui no botão do WhatsApp que o pessoal da Nacional vai te contar como funciona esse processo de criação de sites, sem compromisso.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>⚖️ Análise Legis <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Bora analisar mais um site animado juntos?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">O que você acha desse site aqui?</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">É assim que os sites profissionais são hoje em dia.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Narração — com screenshots do site</div>
+          <div class="script-lines">
+            <div class="script-line has-img">
+              <p>E a gente já começa com essa animação incrível sincronizada com o scroll. Parece que a gente tá realmente <em>entrando</em> no site deles. Aqui tem várias frases que reforçam a marca.</p>
+              <img src="./imgs/img_9.png" alt="Legis — animação inicial" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Wooow, e ele finaliza com a animação do logotipo da empresa, da Legis Dados, que ficou maravilhosa.</p>
+              <img src="./imgs/img_10.png" alt="Legis — logotipo animado" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Na seção seguinte a gente tem um vídeo de fundo, e a animação dos textos também sincronizada com o scroll. A experiência é tão imersiva que parece que você tá assistindo um filme enquanto conhece sobre a empresa.</p>
+              <img src="./imgs/img_11.png" alt="Legis — vídeo de fundo" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Depois a gente entra na seção mais técnica, que mostra de uma maneira bem lúdica pra gente os detalhes do produto/empresa.</p>
+              <img src="./imgs/img_12.png" alt="Legis — seção técnica" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>Pra recuperar a atenção mais uma vez tem outra animação super profissional.</p>
+              <img src="./imgs/img_13.png" alt="Legis — animação de atenção" onclick="openLightbox(this)" />
+            </div>
+            <div class="script-line has-img">
+              <p>E por fim o preço, que, depois de toda essa experiência que é esse site, fica difícil não fechar.</p>
+              <img src="./imgs/img_14.png" alt="Legis — seção de preço" onclick="openLightbox(this)" />
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">E se você também quer um site desse, que representa o valor real da sua empresa, a Nacional é referência em qualidade e agilidade. Clica aqui no botão e entra em contato com eles.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>💼 Roteiro A – Valor Percebido <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Ganchos — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Gancho 1</div><div class="hook-text">Você sente que cobra menos do que sabe que seu serviço vale?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 2</div><div class="hook-text">O seu site mostra o verdadeiro valor do seu negócio hoje?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 3</div><div class="hook-text">O que o cliente pensa sobre a sua empresa quando entra no seu site?</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo — fixo</div>
+          <div class="corpo-block">
+            A verdade é que, hoje em dia, além de ser o melhor você precisa <em>parecer</em>.<br><br>
+            Antigamente, uma página que mostrava isso custava mais de quinze mil reais e levava meses para ser construída. Mas com o método e a tecnologia que a gente tem hoje, leva uma semana, e custa muito menos.<br><br>
+            A LegisDados, uma solução de tecnologia no direito, já fez. E hoje ela é percebida como referência no mercado por quem passa pelo site.
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">Clique aqui e vamos conversar para fazer o seu site também.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>📈 Roteiro B – Concorrência <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Ganchos — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Gancho 1</div><div class="hook-text">Quando um potencial cliente entra no seu site, essa pessoa fica encantada?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 2</div><div class="hook-text">O que o cliente pensa sobre você depois que ele visita seu site?</div></div>
+            <div class="hook-card"><div class="hook-num">Gancho 3</div><div class="hook-text">Como o seu site te posiciona em relação à concorrência?</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo — fixo</div>
+          <div class="corpo-block">
+            A gente sabe que o mercado está ficando mais difícil. Não encantar no primeiro contato pode estar te fazendo perder cliente para a concorrência, mesmo que você seja melhor.<br><br>
+            Mas calma, tem uma coisa boa no meio disso: antes eram necessários meses para fazer um projeto desse, e custava, pelo menos, uns quinze mil reais.<br><br>
+            Hoje leva uma semana e custa muito menos. E por causa disso, já tem gente usando pra mostrar que é a melhor solução do mercado.<br><br>
+            A Equinology, por exemplo, se antecipou e fez mês passado.
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTA</div>
+          <div class="cta-block">Por isso, se você também quer ser referência no seu mercado, clique no "saiba mais" e vamos conversar.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>💉 Roteiro Estética – Valor e posicionamento <span class="rp-arrow">▶</span></summary>
+      <div class="rp-body">
+        <div>
+          <div class="rp-section-title">Hooks — escolha um para variar</div>
+          <div class="hook-grid">
+            <div class="hook-card"><div class="hook-num">Hook 1</div><div class="hook-text">Se você trabalha com estética, fica aqui comigo.</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 2</div><div class="hook-text">Se você não trabalha com estética, pode pular esse vídeo.</div></div>
+            <div class="hook-card"><div class="hook-num">Hook 3</div><div class="hook-text">Não ter um site profissional pode estar fazendo seu cliente te comparar apenas por preço.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">Corpo</div>
+          <div class="corpo-block">
+            Sabe quando chega um cliente que só tá buscando o preço mais baixo? É péssimo né.<br><br>
+            Mas deixa eu te contar, o problema não é necessariamente você.<br><br>
+            É o que acontece <em>antes</em> do paciente chegar em você.<br><br>
+            Geralmente, quem chega direto do Instagram te compara só pelo preço. E sem um contexto, todo preço parece alto.<br><br>
+            Mas a parte boa é que a solução é muito simples:<br><br>
+            Ter um lugar para mandar essa pessoa antes dela solicitar orçamento. Como um site que mostre sua formação, seus casos, seu protocolo. Mas que acima disso, mostre visualmente o seu valor como profissional.<br><br>
+            Antigamente fazer sites assim custava mais de dez, quinze mil reais e levava meses.<br><br>
+            Hoje leva uma semana e custa uma fração disso.<br><br>
+            E além de te ajudar com os clientes, <strong>te enche de orgulho.</strong>
+          </div>
+        </div>
+        <div>
+          <div class="rp-section-title">CTAs — escolha um para variar</div>
+          <div class="cta-block">Se você quer ser a doutora que <em>escolhe</em> os clientes, clica em Saiba Mais para a gente desenvolver um site à altura.</div>
+          <div class="cta-block">Então se você quer parar de justificar seu preço no WhatsApp, clica em Saiba Mais.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ══════════════════ TAKES GERAIS ══════════════════ -->
+<div class="page" id="page-takes">
+  <div class="takes-header">
+    <div class="takes-icon">🎬</div>
+    <h1>Takes Gerais</h1>
+  </div>
+
+  <div class="takes-grid">
+    <div class="takes-person-card">
+      <div class="takes-person-header">
+        <div class="avatar av-maria" style="width:36px;height:36px;font-size:14px">M</div>
+        <span>Maria</span>
+      </div>
+      <div class="takes-list">
+        <div class="take-item" data-id="t-maria-0" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Mexendo no computador</span></div>
+        <div class="take-item" data-id="t-maria-1" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa</span></div>
+        <div class="take-item" data-id="t-maria-2" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Virando o computador para a câmera</span></div>
+        <div class="take-item" data-id="t-maria-3" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa para o time</span></div>
+        <div class="take-item" data-id="t-maria-4" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Scrolando no mouse ou touchpad</span></div>
+      </div>
+    </div>
+
+    <div class="takes-person-card">
+      <div class="takes-person-header">
+        <div class="avatar av-almada" style="width:36px;height:36px;font-size:14px">JA</div>
+        <span>João Almada</span>
+      </div>
+      <div class="takes-list">
+        <div class="take-item" data-id="t-almada-0" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Mexendo no computador</span></div>
+        <div class="take-item" data-id="t-almada-1" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa</span></div>
+        <div class="take-item" data-id="t-almada-2" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Virando o computador para a câmera</span></div>
+        <div class="take-item" data-id="t-almada-3" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa para o time</span></div>
+        <div class="take-item" data-id="t-almada-4" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Scrolando no mouse ou touchpad</span></div>
+      </div>
+    </div>
+
+    <div class="takes-person-card">
+      <div class="takes-person-header">
+        <div class="avatar av-stel" style="width:36px;height:36px;font-size:14px">JS</div>
+        <span>João Stel</span>
+      </div>
+      <div class="takes-list">
+        <div class="take-item" data-id="t-stel-0" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Mexendo no computador</span></div>
+        <div class="take-item" data-id="t-stel-1" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa</span></div>
+        <div class="take-item" data-id="t-stel-2" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Virando o computador para a câmera</span></div>
+        <div class="take-item" data-id="t-stel-3" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa para o time</span></div>
+        <div class="take-item" data-id="t-stel-4" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Scrolando no mouse ou touchpad</span></div>
+      </div>
+    </div>
+
+    <div class="takes-person-card">
+      <div class="takes-person-header">
+        <div class="avatar av-felipe" style="width:36px;height:36px;font-size:14px">F</div>
+        <span>Felipe</span>
+      </div>
+      <div class="takes-list">
+        <div class="take-item" data-id="t-felipe-0" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Mexendo no computador</span></div>
+        <div class="take-item" data-id="t-felipe-1" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa</span></div>
+        <div class="take-item" data-id="t-felipe-2" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Virando o computador para a câmera</span></div>
+        <div class="take-item" data-id="t-felipe-3" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Explicando alguma coisa para o time</span></div>
+        <div class="take-item" data-id="t-felipe-4" onclick="toggleTake(this)"><div class="take-box"><svg width="10" height="7"><use href="#chks"/></svg></div><span class="take-label">Scrolando no mouse ou touchpad</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('page-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Checklist totals
+  const totals = { maria: 4, almada: 4, stel: 2, felipe: 5 };
+
+  function toggle(el) {
+    el.classList.toggle('done');
+    localStorage.setItem(el.dataset.id, el.classList.contains('done') ? '1' : '0');
+    updateProgress(el.dataset.id.split('-')[0]);
+  }
+
+  function toggleTake(el) {
+    el.classList.toggle('done');
+    localStorage.setItem(el.dataset.id, el.classList.contains('done') ? '1' : '0');
+  }
+
+  function updateProgress(person) {
+    const items = document.querySelectorAll(`[data-id^="${person}-"]`);
+    const done = [...items].filter(i => i.classList.contains('done')).length;
+    const total = totals[person];
+    document.getElementById(`prog-text-${person}`).textContent =
+      `${done} de ${total} gravado${done !== 1 ? 's' : ''}`;
+    document.getElementById(`prog-fill-${person}`).style.width = (done / total * 100) + '%';
+  }
+
+  // Restore localStorage state
+  document.querySelectorAll('[data-id]').forEach(el => {
+    if (localStorage.getItem(el.dataset.id) === '1') el.classList.add('done');
+  });
+  Object.keys(totals).forEach(updateProgress);
+
+  // Inject audio players into Felipe's roteiros only
+  const felipePage = document.getElementById('page-felipe');
+  const audioFiles = [
+    './Áudios/Analise Equinology.m4a.mp4',
+    './Áudios/Analise Legis dados.m4a.mp4',
+    './Áudios/Roteiro A - Valor percebido.m4a.mp4',
+    './Áudios/Roteiro B - Concorrência.m4a.mp4',
+    './Áudios/Roteiro Estética - Valor e posicionamento.m4a.mp4',
+  ];
+  felipePage.querySelectorAll('details.rp').forEach((detail, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'audio-prep';
+    wrap.innerHTML = `
+      <div class="audio-prep-label">🎧 Áudio de preparação do Felipe</div>
+      <audio controls preload="metadata" src="${audioFiles[i]}"></audio>
+    `;
+    detail.querySelector('.rp-body').prepend(wrap);
+  });
+
+  // Lightbox
+  function openLightbox(img) {
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
